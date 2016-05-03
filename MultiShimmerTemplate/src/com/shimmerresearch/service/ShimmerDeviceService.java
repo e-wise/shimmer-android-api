@@ -59,7 +59,6 @@ public class ShimmerDeviceService extends Service {
     private static WeakReference<ShimmerDeviceService> mService;
     public DatabaseHandler mDataBase;
     public List<ShimmerConfiguration> mShimmerConfigurationList = new ArrayList<>();
-    public List<String> mConnectedShimmerBtAddresses = new ArrayList<>();
     public static String mBluetoothAddressToHeartRate;
 
     @Override
@@ -108,7 +107,6 @@ public class ShimmerDeviceService extends Service {
             mHandlerWrite.obtainMessage(MESSAGE_WRITING_STOPED).sendToTarget();
         }
         mLogShimmer.clear();
-        mConnectedShimmerBtAddresses.clear();
     }
 
 
@@ -123,11 +121,6 @@ public class ShimmerDeviceService extends Service {
         shimmerDevice = new Shimmer(this, mHandler, deviceName, false);
 
         shimmerDevice.connect(bluetoothAddress, "default");
-
-        //TODO remove this structure
-        if (!(mConnectedShimmerBtAddresses.contains(bluetoothAddress))) {
-            mConnectedShimmerBtAddresses.add(bluetoothAddress);
-        }
     }
 
 
@@ -193,9 +186,6 @@ public class ShimmerDeviceService extends Service {
             //dont connect if it is already in the hashmap
             if (mTempShimmerConfigurationList.size() != 0) {
                 connectandConfigureShimmer(mTempShimmerConfigurationList.get(0));
-                if (!(mConnectedShimmerBtAddresses.contains(mTempShimmerConfigurationList.get(0).getBluetoothAddress()))) {
-                    mConnectedShimmerBtAddresses.add(mTempShimmerConfigurationList.get(0).getBluetoothAddress());
-                }
             }
         }
 
@@ -370,7 +360,7 @@ public class ShimmerDeviceService extends Service {
     }
 
     public void setEnabledSensors(long enabledSensors, String bluetoothAddress) {
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             if (shimmerIsStreaming()) {
                 Toast.makeText(this, "In order to configure, please stop streaming", Toast.LENGTH_LONG).show();
             } else {
@@ -389,13 +379,13 @@ public class ShimmerDeviceService extends Service {
 
     public boolean isShimmerConnected(String bluetoothAddress) {
 
-        return (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress));
+        return (shimmerIsConnected());
     }
 
     public long getEnabledSensors(String bluetoothAddress) {
         long enabledSensors = 0;
 
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             enabledSensors = shimmerDevice.getEnabledSensors();
         }
         return enabledSensors;
@@ -404,14 +394,14 @@ public class ShimmerDeviceService extends Service {
 
     public void writeSamplingRate(String bluetoothAddress, double samplingRate) {
 
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             shimmerDevice.writeSamplingRate(samplingRate);
         }
     }
 
     public void writeGSRRange(String bluetoothAddress, int gsrRange) {
 
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             shimmerDevice.writeGSRRange(gsrRange);
         }
     }
@@ -419,7 +409,7 @@ public class ShimmerDeviceService extends Service {
 
     public double getSamplingRate(String bluetoothAddress) {
         double SRate = UNKNOWN_VALUE;
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             SRate = shimmerDevice.getSamplingRate();
         }
         return SRate;
@@ -427,7 +417,7 @@ public class ShimmerDeviceService extends Service {
 
     public int getShimmerState(String bluetoothAddress) {
         int status = UNKNOWN_VALUE;
-        if (shimmerDevice != null && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerDevice != null) {
             status = shimmerDevice.getShimmerState();
             Log.d("ShimmerState", Integer.toString(status));
         }
@@ -436,7 +426,7 @@ public class ShimmerDeviceService extends Service {
 
     public int getGSRRange(String bluetoothAddress) {
         int GSRRange = UNKNOWN_VALUE;
-        if (shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             GSRRange = shimmerDevice.getGSRRange();
             Log.d("ShimmerState", Integer.toString(GSRRange));
         }
@@ -445,18 +435,19 @@ public class ShimmerDeviceService extends Service {
 
     public void startStreaming(String bluetoothAddress) {
 
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress) && !shimmerIsStreaming())
+        if (shimmerIsConnected() && !shimmerIsStreaming())
             shimmerDevice.startStreaming();
     }
 
     public void stopStreaming(String bluetoothAddress) {
 
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress) && shimmerIsStreaming()) {
+        if (shimmerIsConnected() && shimmerIsStreaming()) {
             shimmerDevice.stopStreaming();
             if (mWriting == true) {
-                mLogShimmer.get(bluetoothAddress).closeFile();
-                MediaScannerConnection.scanFile(this, new String[]{mLogShimmer.get(bluetoothAddress).getAbsoluteName()}, null, null);
-                mLogShimmer.remove(bluetoothAddress);
+                String btAddress = shimmerDevice.getBluetoothAddress();
+                mLogShimmer.get(btAddress).closeFile();
+                MediaScannerConnection.scanFile(this, new String[]{mLogShimmer.get(btAddress).getAbsoluteName()}, null, null);
+                mLogShimmer.remove(btAddress);
                 if (mLogShimmer.size() == 0) {
                     mWriting = false;
                     mHandlerWrite.obtainMessage(MESSAGE_WRITING_STOPED).sendToTarget();
@@ -467,7 +458,8 @@ public class ShimmerDeviceService extends Service {
 
     public void disconnectShimmerNew(String bluetoothAddress) {
 
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
+            String btAddress = shimmerDevice.getBluetoothAddress();
             shimmerDevice.stop();
             if (mWriting == true) {
                 //wait until all the messages from the device are processed
@@ -476,9 +468,9 @@ public class ShimmerDeviceService extends Service {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                mLogShimmer.get(bluetoothAddress).closeFile();
-                MediaScannerConnection.scanFile(this, new String[]{mLogShimmer.get(bluetoothAddress).getAbsoluteName()}, null, null);
-                mLogShimmer.remove(bluetoothAddress);
+                mLogShimmer.get(btAddress).closeFile();
+                MediaScannerConnection.scanFile(this, new String[]{mLogShimmer.get(btAddress).getAbsoluteName()}, null, null);
+                mLogShimmer.remove(btAddress);
                 if (mLogShimmer.size() == 0) {
                     mWriting = false;
                     mHandlerWrite.obtainMessage(MESSAGE_WRITING_STOPED).sendToTarget();
@@ -486,8 +478,6 @@ public class ShimmerDeviceService extends Service {
             }
         }
         shimmerDevice = null;
-        mLogShimmer.remove(bluetoothAddress);
-        mConnectedShimmerBtAddresses.remove(bluetoothAddress);
     }
 
 
@@ -529,13 +519,14 @@ public class ShimmerDeviceService extends Service {
         return !allDevicesStreaming();
     }
 
-    public boolean allDevicesStreaming() {
-        return (shimmerIsConnected() && shimmerIsStreaming());
+    public boolean deviceStreaming(String address) {
+        return shimmerIsConnected() && shimmerIsStreaming();
     }
 
-    public boolean deviceStreaming(String address) {
-        return shimmerIsConnected() && shimmerIsStreaming() && shimmerDevice.getBluetoothAddress().equals(address);
+    public boolean allDevicesStreaming() {
+        return deviceStreaming(null);
     }
+
 
     public void removeExapandableStates(String activityName) {
         //a true in States means the listview is in an expanded state
@@ -561,7 +552,7 @@ public class ShimmerDeviceService extends Service {
     }
 
     public Shimmer getShimmer(String bluetoothAddress) {
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             return shimmerDevice;
         }
         return null;
@@ -569,7 +560,7 @@ public class ShimmerDeviceService extends Service {
 
     public int getShimmerVersion(String bluetoothAddress) {
         int version = UNKNOWN_VALUE;
-        if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
+        if (shimmerIsConnected()) {
             version = shimmerDevice.getShimmerVersion();
         }
         return version;
