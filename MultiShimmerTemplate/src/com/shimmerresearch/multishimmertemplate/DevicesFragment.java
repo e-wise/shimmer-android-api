@@ -283,19 +283,19 @@ public class DevicesFragment extends Fragment{
  						for (int i=0;i<compatibleSensors.length;i++){
  							if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("ECG")){
  	 							if(mService.isEXGUsingECG16Configuration(deviceBluetoothAddresses[currentPosition]) ||
- 	 									mService.isEXGUsingECG24Configuration(deviceBluetoothAddresses[currentPosition])){ 
+ 	 									mService.isEXGUsingECG24Configuration(deviceBluetoothAddresses[currentPosition])){
  	 								enableSensorListView.setItemChecked(i, true);
  	 							}
  							}
  							else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("EMG")){
  	 							if(mService.isEXGUsingEMG16Configuration(deviceBluetoothAddresses[currentPosition]) ||
- 	 									mService.isEXGUsingEMG24Configuration(deviceBluetoothAddresses[currentPosition])){ 
+ 	 									mService.isEXGUsingEMG24Configuration(deviceBluetoothAddresses[currentPosition])){
  	 								enableSensorListView.setItemChecked(i, true);
  	 							}
  							}
  							else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("Test signal")){
- 	 							if(mService.isEXGUsingTestSignal16Configuration(deviceBluetoothAddresses[currentPosition]) || 
- 	 									mService.isEXGUsingTestSignal24Configuration(deviceBluetoothAddresses[currentPosition])){ 
+ 	 							if(mService.isEXGUsingTestSignal16Configuration(deviceBluetoothAddresses[currentPosition]) ||
+ 	 									mService.isEXGUsingTestSignal24Configuration(deviceBluetoothAddresses[currentPosition])){
  	 								enableSensorListView.setItemChecked(i, true);
  	 							}
  							} 							
@@ -356,7 +356,7 @@ public class DevicesFragment extends Fragment{
 					if(enableSensorListView.isItemChecked(position))
 						mService.writeEXGSetting(deviceBluetoothAddresses[currentPosition], 0);
 
-					
+
 				}
 				else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("EMG")){
 					int iDBMValue1 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
@@ -378,7 +378,7 @@ public class DevicesFragment extends Fragment{
 					if(enableSensorListView.isItemChecked(position))
 						mService.writeEXGSetting(deviceBluetoothAddresses[currentPosition], 1);
 
-						
+
 				}
 				else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("Test signal")){
 					int iDBMValue1 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
@@ -399,8 +399,8 @@ public class DevicesFragment extends Fragment{
 					enableSensorListView.setItemChecked(position-2, false); //ECG
 					if(enableSensorListView.isItemChecked(position))
 						mService.writeEXGSetting(deviceBluetoothAddresses[currentPosition], 2);
-				
-						
+
+
 				}
 				else{
 					int sensorIdentifier = Integer.parseInt(sensorBitmaptoName.inverse().get(compatibleSensors[position]));

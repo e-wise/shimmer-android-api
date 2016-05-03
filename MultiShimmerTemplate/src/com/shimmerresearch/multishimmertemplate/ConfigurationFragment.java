@@ -760,25 +760,6 @@ public class ConfigurationFragment extends Fragment{
 					enableSensorListView.setItemChecked(position+1, false); //EMG
 					enableSensorListView.setItemChecked(position+2, false);// TEST SIGNAL
 					
-//					if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT)>0) && 
-//							!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT)>0)){
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddress));
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddress));
-//					}
-//					
-//					if(!enableSensorListView.isItemChecked(position)){
-//						enableSensorListView.setItemChecked(position, false); //ECG
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddress));
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddress));
-//					}
-//					else
-//						enableSensorListView.setItemChecked(position, true); //ECG
-//					enableSensorListView.setItemChecked(position+1, false); //EMG
-//					enableSensorListView.setItemChecked(position+2, false);// TEST SIGNAL
-//					if(enableSensorListView.isItemChecked(position))
-//						mService.writeEXGSetting(deviceBluetoothAddress, 0);
-
-					
 				}
 				else if(mService.getShimmerVersion(deviceBluetoothAddress)==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("EMG")){
 					int exg1_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
@@ -819,26 +800,6 @@ public class ConfigurationFragment extends Fragment{
 					
 					enableSensorListView.setItemChecked(position-1, false); //ECG
 					enableSensorListView.setItemChecked(position+1, false); //TEST SIGNAL
-					
-//					int iDBMValue1 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
-//					int iDBMValue3 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
-//					if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT)>0) && 
-//							!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT)>0)){
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddress));
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddress));
-//					}
-//					if(!enableSensorListView.isItemChecked(position)){
-//						enableSensorListView.setItemChecked(position, false); //EMG
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddress));
-//						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddress));
-//					}
-//					else
-//						enableSensorListView.setItemChecked(position, true); //EMG
-//					enableSensorListView.setItemChecked(position-1, false); //ECG
-//					enableSensorListView.setItemChecked(position+1, false); //TEST SIGNAL
-//					if(enableSensorListView.isItemChecked(position))
-//						mService.writeEXGSetting(deviceBluetoothAddress, 1);
-
 						
 				}
 				else if(mService.getShimmerVersion(deviceBluetoothAddress)==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("Test signal")){
@@ -1264,7 +1225,6 @@ public class ConfigurationFragment extends Fragment{
 					if(mSensorToHeartRate.equals("")){
 						cBoxHeartRate.setChecked(false);
 						Toast.makeText(getActivity(), "The sensor selected is disabled. Please, enable the sensor in order to calculate the Heart Rate.", Toast.LENGTH_LONG).show();
-//						heartRateDialog.dismiss();
 					}
 					else{
 						if (mSensorToHeartRate.equals(Shimmer3.ObjectClusterSensorName.ECG_VX_RL_24BIT) ||
