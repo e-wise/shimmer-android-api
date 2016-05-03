@@ -34,6 +34,8 @@ public class ShimmerDeviceService extends Service {
 
     public static Shimmer shimmerDevice = null;
 
+    private static int UNKNOWN_VALUE = -1;
+
     private static final String TAG = "MyService";
     public static final int MESSAGE_CONFIGURATION_CHANGE = 34;
     public static final int MESSAGE_WRITING_STOPED = 1;
@@ -252,7 +254,7 @@ public class ShimmerDeviceService extends Service {
                     break;
                 case Shimmer.MESSAGE_STATE_CHANGE:
                     if (mHandlerGraph != null) {
-                        mHandlerGraph.obtainMessage(Shimmer.MESSAGE_STATE_CHANGE, msg.arg1, -1, msg.obj).sendToTarget();
+                        mHandlerGraph.obtainMessage(Shimmer.MESSAGE_STATE_CHANGE, msg.arg1, UNKNOWN_VALUE, msg.obj).sendToTarget();
                     }
                     switch (msg.arg1) {
                         case Shimmer.STATE_CONNECTED:
@@ -416,8 +418,7 @@ public class ShimmerDeviceService extends Service {
 
 
     public double getSamplingRate(String bluetoothAddress) {
-
-        double SRate = -1;
+        double SRate = UNKNOWN_VALUE;
         if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
             SRate = shimmerDevice.getSamplingRate();
         }
@@ -425,7 +426,7 @@ public class ShimmerDeviceService extends Service {
     }
 
     public int getShimmerState(String bluetoothAddress) {
-        int status = -1;
+        int status = UNKNOWN_VALUE;
         if (shimmerDevice != null && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
             status = shimmerDevice.getShimmerState();
             Log.d("ShimmerState", Integer.toString(status));
@@ -434,7 +435,7 @@ public class ShimmerDeviceService extends Service {
     }
 
     public int getGSRRange(String bluetoothAddress) {
-        int GSRRange = -1;
+        int GSRRange = UNKNOWN_VALUE;
         if (shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
             GSRRange = shimmerDevice.getGSRRange();
             Log.d("ShimmerState", Integer.toString(GSRRange));
@@ -520,7 +521,7 @@ public class ShimmerDeviceService extends Service {
 
         List<ShimmerConfiguration> mShimmerConfigurationList = new ArrayList<ShimmerConfiguration>();
         if (shimmerIsConnected() && shimmerIsStreaming())
-            mShimmerConfigurationList.add(new ShimmerConfiguration(shimmerDevice.getDeviceName(), shimmerDevice.getBluetoothAddress(), -1, shimmerDevice.getEnabledSensors(), shimmerDevice.getSamplingRate(), shimmerDevice.getAccelRange(), shimmerDevice.getGSRRange(), shimmerDevice.getShimmerVersion(), shimmerDevice.getLowPowerAccelEnabled(), shimmerDevice.getLowPowerGyroEnabled(), shimmerDevice.getLowPowerMagEnabled(), shimmerDevice.getGyroRange(), shimmerDevice.getMagRange(), shimmerDevice.getPressureResolution(), shimmerDevice.getInternalExpPower()));
+            mShimmerConfigurationList.add(new ShimmerConfiguration(shimmerDevice.getDeviceName(), shimmerDevice.getBluetoothAddress(), UNKNOWN_VALUE, shimmerDevice.getEnabledSensors(), shimmerDevice.getSamplingRate(), shimmerDevice.getAccelRange(), shimmerDevice.getGSRRange(), shimmerDevice.getShimmerVersion(), shimmerDevice.getLowPowerAccelEnabled(), shimmerDevice.getLowPowerGyroEnabled(), shimmerDevice.getLowPowerMagEnabled(), shimmerDevice.getGyroRange(), shimmerDevice.getMagRange(), shimmerDevice.getPressureResolution(), shimmerDevice.getInternalExpPower()));
         return mShimmerConfigurationList;
     }
 
@@ -567,7 +568,7 @@ public class ShimmerDeviceService extends Service {
     }
 
     public int getShimmerVersion(String bluetoothAddress) {
-        int version = -1;
+        int version = UNKNOWN_VALUE;
         if (shimmerIsConnected() && shimmerDevice.getBluetoothAddress().equals(bluetoothAddress)) {
             version = shimmerDevice.getShimmerVersion();
         }
@@ -733,19 +734,19 @@ public class ShimmerDeviceService extends Service {
     }
 
     public int getEXGGain(String mBluetoothAddress) {
-        return -1;
+        return UNKNOWN_VALUE;
     }
 
     public int getEXGResolution(String mBluetoothAddress) {
-        return -1;
+        return UNKNOWN_VALUE;
     }
 
     public int get5VReg(String mBluetoothAddress) {
-        return -1;
+        return UNKNOWN_VALUE;
     }
 
     public double getBattLimitWarning(String mBluetoothAddress) {
-        return -1;
+        return UNKNOWN_VALUE;
     }
 
     public void setBattLimitWarning(String mBluetoothAddress, double newLimit) {
