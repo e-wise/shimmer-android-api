@@ -57,7 +57,6 @@ public class ShimmerDeviceService extends Service {
     public static List<String> mDeviceNametoConnect = new ArrayList<>(0);
     public List<String> list = new ArrayList<>(0);
     private static WeakReference<ShimmerDeviceService> mService;
-    public DatabaseHandler mDataBase;
     public List<ShimmerConfiguration> mShimmerConfigurationList = new ArrayList<>();
     public static String mBluetoothAddressToHeartRate;
 
@@ -69,11 +68,10 @@ public class ShimmerDeviceService extends Service {
     @Override
     public void onCreate() {
         Log.d(TAG, "onCreate");
-        mDataBase = new DatabaseHandler(this);
         for (int[] row : mGroupChildColor) {
             Arrays.fill(row, Color.rgb(0, 0, 0));
         }
-        mService = new WeakReference<ShimmerDeviceService>(this);
+        mService = new WeakReference<>(this);
     }
 
     public class LocalBinder extends Binder {
@@ -121,8 +119,10 @@ public class ShimmerDeviceService extends Service {
         shimmerDevice = new Shimmer(this, mHandler, deviceName, false);
 
         shimmerDevice.connect(bluetoothAddress, "default");
-    }
 
+        ///background configuration.
+
+    }
 
     public void connectandConfigureShimmer(ShimmerConfiguration shimmerConfiguration) {
         Log.d("Shimmer", "net Connection");
@@ -321,7 +321,7 @@ public class ShimmerDeviceService extends Service {
                                         sc.setLowPowerMagEnabled(shimmer.getLowPowerMagEnabled());
                                     }
                                     service.mShimmerConfigurationList.set(i, sc);
-                                    service.mDataBase.saveShimmerConfigurations("Temp", service.mShimmerConfigurationList);
+//                                    service.mDataBase.saveShimmerConfigurations("Temp", service.mShimmerConfigurationList);
                                 }
                             }
                             mHandlerGraph.obtainMessage(MESSAGE_CONFIGURATION_CHANGE, 1, 1, 1).sendToTarget();
