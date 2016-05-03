@@ -159,7 +159,7 @@ public class ListViewFragmentAdapter extends ArrayAdapter<String>{
 						dF.getActivity().getActionBar().setTitle(title); //set the title of the window
 					}
 					else if(optionSelected.equals(dF.ENABLE_SENSOR)){
-						Shimmer shimmer = dF.mService.getShimmer(dF.deviceBluetoothAddresses[currentPosition]);
+						Shimmer shimmer = dF.mService.getShimmer();
 						dF.compatibleSensors = shimmer.getListofSupportedSensors();
 						
 						if(shimmer.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3){ //replace EXG1, EXG2, EXG1 16 bit and EXG2 16 bit for ECG,EMG and test signal
@@ -178,29 +178,29 @@ public class ListViewFragmentAdapter extends ArrayAdapter<String>{
 //							System.arraycopy(tmp,0, compatibleSensors, 0, tmp.size());
 //							compatibleSensors =  (String[]) tmp.toArray();
 						}
-						dF.enabledSensors=dF.mService.getEnabledSensors(dF.deviceBluetoothAddresses[currentPosition]);
+						dF.enabledSensors=dF.mService.getEnabledSensors();
 // 						List<SelectedSensors> listEnableSensors = createListOfEnableSensor(enabledSensors);						
 						dF.enableSensorListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
  						ArrayAdapter<String> adapterSensorNames = new ArrayAdapter<String>(dF.getActivity(), android.R.layout.simple_list_item_multiple_choice, dF.compatibleSensors);
  						dF.enableSensorListView.setAdapter(adapterSensorNames);
- 						dF.sensorBitmaptoName = Shimmer.generateBiMapSensorIDtoSensorName(dF.mService.getShimmerVersion(dF.deviceBluetoothAddresses[currentPosition]));
+ 						dF.sensorBitmaptoName = Shimmer.generateBiMapSensorIDtoSensorName(dF.mService.getShimmerVersion());
  						//check the enabled sensors
  						for (int i=0;i<dF.compatibleSensors.length;i++){
- 							if(dF.mService.getShimmerVersion(dF.deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && dF.compatibleSensors[i].equals("ECG")){
- 	 							if(dF.mService.isEXGUsingECG16Configuration(dF.deviceBluetoothAddresses[currentPosition]) ||
- 	 									dF.mService.isEXGUsingECG24Configuration(dF.deviceBluetoothAddresses[currentPosition])){ 
+ 							if(dF.mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && dF.compatibleSensors[i].equals("ECG")){
+ 	 							if(dF.mService.isEXGUsingECG16Configuration() ||
+ 	 									dF.mService.isEXGUsingECG24Configuration()){
  	 								dF.enableSensorListView.setItemChecked(i, true);
  	 							}
  							}
- 							else if(dF.mService.getShimmerVersion(dF.deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && dF.compatibleSensors[i].equals("EMG")){
- 	 							if(dF.mService.isEXGUsingEMG16Configuration(dF.deviceBluetoothAddresses[currentPosition]) ||
- 	 									dF.mService.isEXGUsingEMG24Configuration(dF.deviceBluetoothAddresses[currentPosition])){ 
+ 							else if(dF.mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && dF.compatibleSensors[i].equals("EMG")){
+ 	 							if(dF.mService.isEXGUsingEMG16Configuration() ||
+ 	 									dF.mService.isEXGUsingEMG24Configuration()){
  	 								dF.enableSensorListView.setItemChecked(i, true);
  	 							}
  							}
- 							else if(dF.mService.getShimmerVersion(dF.deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && dF.compatibleSensors[i].equals("Test signal")){
- 	 							if(dF.mService.isEXGUsingTestSignal16Configuration(dF.deviceBluetoothAddresses[currentPosition]) || 
- 	 									dF.mService.isEXGUsingTestSignal24Configuration(dF.deviceBluetoothAddresses[currentPosition])){ 
+ 							else if(dF.mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && dF.compatibleSensors[i].equals("Test signal")){
+ 	 							if(dF.mService.isEXGUsingTestSignal16Configuration() ||
+ 	 									dF.mService.isEXGUsingTestSignal24Configuration()){
  	 								dF.enableSensorListView.setItemChecked(i, true);
  	 							}
  							} 							
@@ -346,7 +346,7 @@ public class ListViewFragmentAdapter extends ArrayAdapter<String>{
 				}
 				else{
 					
-					switch(dF.mService.getShimmerState(dF.deviceBluetoothAddresses[currentPosition])){							
+					switch(dF.mService.getShimmerState()){
 						case 0: // DISCONNECTED
 							dF.arrayAdapter.add(dF.CONNECT);
 							dF.arrayAdapter.add(dF.DELETE);
@@ -357,7 +357,7 @@ public class ListViewFragmentAdapter extends ArrayAdapter<String>{
 						case 2: // CONNECTED
 							if(dF.fully_initialized[currentPosition]){	
 								dF.arrayAdapter.add(dF.DISCONNECT);
-								if(dF.mService.deviceStreaming(dF.deviceBluetoothAddresses[currentPosition])){
+								if(dF.mService.deviceStreaming()){
 									dF.arrayAdapter.add(dF.STOP_STREAMING);
 									dF.arrayAdapter.add(dF.TOGGLE_LED);
 								}

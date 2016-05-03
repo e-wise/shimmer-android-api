@@ -364,7 +364,7 @@ public class PlotFragment extends Fragment {
 	  		for (ShimmerConfiguration sc:shimmerConfigurationList){
 	  			deviceNames[pos]=sc.getDeviceName();
 	      		deviceBluetoothAddresses[pos]=sc.getBluetoothAddress();
-	      		Shimmer shimmer = mService.getShimmer(deviceBluetoothAddresses[pos]);
+	      		Shimmer shimmer = mService.getShimmer();
 	      		mEnabledSensorNames[pos]=shimmer.getListofEnabledSensorSignals();
 	      		numberofChilds[pos]=getNumberofChildren(sc.getEnabledSensors(),sc.getBluetoothAddress());
 	      		ArrayList<SelectedSensors> sensors = new ArrayList<SelectedSensors>();
@@ -390,7 +390,7 @@ public class PlotFragment extends Fragment {
 	    
 	    public int getNumberofChildren(long enabledSensors, String bluetoothAddress){
 	    	int count=1; //timestamp
-	    	int shimmerVersion = mService.getShimmerVersion(bluetoothAddress);
+	    	int shimmerVersion = mService.getShimmerVersion();
 	    	if (shimmerVersion==ShimmerVerDetails.HW_ID.SHIMMER_3 || shimmerVersion==ShimmerVerDetails.HW_ID.SHIMMER_SR30){
 	    		if (((enabledSensors & 0xFF)& Shimmer.SENSOR_ACCEL) > 0){
 	 		    	count=count+3;
@@ -446,7 +446,7 @@ public class PlotFragment extends Fragment {
 	 			if ((enabledSensors & 0x100000) > 0) {
 	 				count=count+3;
 	 			}
-	 			if ((((enabledSensors & 0xFF)& Shimmer.SENSOR_ACCEL) > 0 || (((enabledSensors & 0xFFFF)& Shimmer.SENSOR_DACCEL) > 0)) && ((enabledSensors & 0xFF)& Shimmer.SENSOR_GYRO) > 0 && ((enabledSensors & 0xFF)& Shimmer.SENSOR_MAG) > 0 && mService.is3DOrientationEnabled(bluetoothAddress)){
+	 			if ((((enabledSensors & 0xFF)& Shimmer.SENSOR_ACCEL) > 0 || (((enabledSensors & 0xFFFF)& Shimmer.SENSOR_DACCEL) > 0)) && ((enabledSensors & 0xFF)& Shimmer.SENSOR_GYRO) > 0 && ((enabledSensors & 0xFF)& Shimmer.SENSOR_MAG) > 0 && mService.is3DOrientationEnabled()){
 	 				count=count+8; //axis angle and quartenion
 	 			}
 	    	} else {
@@ -481,11 +481,11 @@ public class PlotFragment extends Fragment {
 				if (((enabledSensors & 0xFF) & Shimmer.SENSOR_EXP_BOARD_A7) > 0) {
 					count++;
 				}
-				if (((enabledSensors & 0xFF)& Shimmer.SENSOR_ACCEL) > 0 && ((enabledSensors & 0xFF)& Shimmer.SENSOR_GYRO) > 0 && ((enabledSensors & 0xFF)& Shimmer.SENSOR_MAG) > 0 && mService.is3DOrientationEnabled(bluetoothAddress)){
+				if (((enabledSensors & 0xFF)& Shimmer.SENSOR_ACCEL) > 0 && ((enabledSensors & 0xFF)& Shimmer.SENSOR_GYRO) > 0 && ((enabledSensors & 0xFF)& Shimmer.SENSOR_MAG) > 0 && mService.is3DOrientationEnabled()){
 					count=count+8; //axis angle and quartenion
 				}
 	    	}
-	    	Shimmer shimmer = mService.getShimmer(bluetoothAddress);
+	    	Shimmer shimmer = mService.getShimmer();
 	    	if (shimmer!=null){
 	    		
 	    	}
@@ -729,7 +729,7 @@ public class PlotFragment extends Fragment {
 				heartRateText.setVisibility(View.VISIBLE);
 				heartRateCont=0;
 				mBluetoothAddressToHeartRate = mService.mBluetoothAddressToHeartRate;
-				heartRateRefresh = (int) mService.getSamplingRate(mBluetoothAddressToHeartRate);
+				heartRateRefresh = (int) mService.getSamplingRate();
 			}
 			else{
 				hearRateImage.setVisibility(View.GONE);

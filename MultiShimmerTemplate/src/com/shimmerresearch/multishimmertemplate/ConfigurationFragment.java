@@ -202,13 +202,13 @@ public class ConfigurationFragment extends Fragment {
             cBoxLowPowerGyro.setChecked(true);
         }
 
-        int gain = mService.getEXGGain(mBluetoothAddress);
+        int gain = mService.getEXGGain();
         if (gain != -1)
             buttonExgGain.setText("EXG Gain" + "\n (" + gain + ")");
         else
             buttonExgGain.setText("EXG Gain" + "\n (no gain set)");
 
-        exgRes = mService.getEXGResolution(mBluetoothAddress);
+        exgRes = mService.getEXGResolution();
         if (exgRes == 16 || exgRes == 24)
             buttonExgRes.setText("EXG Res" + "\n (" + exgRes + " bit)");
         else
@@ -242,7 +242,7 @@ public class ConfigurationFragment extends Fragment {
             buttonMagRange.setText("Mag Range" + "\n" + currentMagRange);
         }
 
-        if (mService.get5VReg(mBluetoothAddress) == 1) {
+        if (mService.get5VReg() == 1) {
             cBox5VReg.setChecked(true);
         }
 
@@ -288,13 +288,13 @@ public class ConfigurationFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         double newLimit = Double.parseDouble(editTextBattLimit.getText().toString());
-                        mService.setBattLimitWarning(mBluetoothAddress, newLimit);
+                        mService.setBattLimitWarning(newLimit);
                         Toast.makeText(getActivity(), "Battery limit changed. New limit = " + newLimit + " V", Toast.LENGTH_SHORT).show();
                         buttonBattVoltLimit.setText("Batt Limit " + "\n" + "(" + newLimit + " V)");
                     }
                 });
 
-        double batteryLimit = mService.getBattLimitWarning(mBluetoothAddress);
+        double batteryLimit = mService.getBattLimitWarning();
         buttonBattVoltLimit.setText("Batt Limit " + "\n" + "(" + Double.toString(batteryLimit) + " V)");
 
 
@@ -321,7 +321,7 @@ public class ConfigurationFragment extends Fragment {
                 double newRate = Double.valueOf(samplingRate[item]);
                 shimmerConfig.setSamplingRate(newRate);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeSamplingRate(mBluetoothAddress, newRate);
+                mService.writeSamplingRate(newRate);
                 Toast.makeText(getActivity(), "Sample rate changed. New rate = " + newRate + " Hz", Toast.LENGTH_SHORT).show();
                 buttonSampleRate.setText("Sampling Rate " + "\n" + "(" + newRate + " Hz)");
             }
@@ -350,7 +350,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setAccelRange(accelRange);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeAccelRange(mBluetoothAddress, accelRange);
+                mService.writeAccelRange(accelRange);
                 Toast.makeText(getActivity(), "Accelerometer rate changed. New rate = " + accelRangeArray[item], Toast.LENGTH_SHORT).show();
                 buttonAccRange.setText("Accel Range" + "\n" + "(" + accelRangeArray[item] + ")");
             }
@@ -380,7 +380,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setAccelRange(accelRange);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeAccelRange(mBluetoothAddress, accelRange);
+                mService.writeAccelRange(accelRange);
                 Toast.makeText(getActivity(), "Accelerometer rate changed. New rate = " + Configuration.Shimmer3.ListofAccelRange[item], Toast.LENGTH_SHORT).show();
                 buttonAccRange.setText("Accel Range" + "\n" + "(" + Configuration.Shimmer3.ListofAccelRange[item] + ")");
 
@@ -392,7 +392,7 @@ public class ConfigurationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (mService.getShimmerVersion(mBluetoothAddress) != ShimmerVerDetails.HW_ID.SHIMMER_3)
+                if (mService.getShimmerVersion() != ShimmerVerDetails.HW_ID.SHIMMER_3)
                     dialogAccelShimmer2.show();
                 else
                     dialogAccelShimmer3.show();
@@ -418,7 +418,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setGyroRange(gyroRange);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeGyroRange(mBluetoothAddress, gyroRange);
+                mService.writeGyroRange(gyroRange);
                 Toast.makeText(getActivity(), "Gyroscope rate changed. New rate = " + Configuration.Shimmer3.ListofGyroRange[item], Toast.LENGTH_SHORT).show();
                 buttonGyroRange.setText("Gyro Range" + "\n" + "(" + Configuration.Shimmer3.ListofGyroRange[item] + ")");
             }
@@ -461,7 +461,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setMagRange(magRange);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeMagRange(mBluetoothAddress, magRange);
+                mService.writeMagRange(magRange);
                 Toast.makeText(getActivity(), "Magnometer rate changed. New rate = " + Configuration.Shimmer2.ListofMagRange[item], Toast.LENGTH_SHORT).show();
                 buttonMagRange.setText("Mag Range" + "\n" + "(" + Configuration.Shimmer2.ListofMagRange[item] + ")");
             }
@@ -491,7 +491,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setMagRange(magRange);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeMagRange(mBluetoothAddress, magRange);
+                mService.writeMagRange(magRange);
                 Toast.makeText(getActivity(), "Magnometer rate changed. New rate = " + Configuration.Shimmer3.ListofMagRange[item], Toast.LENGTH_SHORT).show();
                 buttonMagRange.setText("Mag Range" + "\n" + "(" + Configuration.Shimmer3.ListofMagRange[item] + ")");
             }
@@ -501,7 +501,7 @@ public class ConfigurationFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (mService.getShimmerVersion(mBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3)
+                if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3)
                     dialogMagRangeShimmer3.show();
                 else
                     dialogMagRangeShimmer2.show();
@@ -527,7 +527,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setPressureResolution(pressureRes);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writePressureResolution(mBluetoothAddress, pressureRes);
+                mService.writePressureResolution(pressureRes);
                 Toast.makeText(getActivity(), "Pressure resolution changed. New resolution = " + Configuration.Shimmer3.ListofPressureResolution[item], Toast.LENGTH_SHORT).show();
                 buttonPressureResolution.setText("Pressure Res" + "\n" + "(" + Configuration.Shimmer3.ListofPressureResolution[item] + ")");
             }
@@ -562,7 +562,7 @@ public class ConfigurationFragment extends Fragment {
 
                 shimmerConfig.setGSRRange(gsrRange);
                 mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
-                mService.writeGSRRange(mBluetoothAddress, gsrRange);
+                mService.writeGSRRange(gsrRange);
                 Toast.makeText(getActivity(), "Gsr range changed. New range = " + Configuration.Shimmer3.ListofGSRRange[item], Toast.LENGTH_SHORT).show();
                 buttonGsr.setText("GSR Range" + "\n" + "(" + Configuration.Shimmer3.ListofGSRRange[item] + ")");
 
@@ -600,7 +600,7 @@ public class ConfigurationFragment extends Fragment {
                     exgGainNew = 6;
                 }
 
-                mService.writeEXGGainSetting(mBluetoothAddress, exgGainNew);
+                mService.writeEXGGainSetting(exgGainNew);
                 Toast.makeText(getActivity(), "Exg gain changed. New gain = " + exgGain[item], Toast.LENGTH_SHORT).show();
                 buttonExgGain.setText("EXG Gain" + "\n" + "(" + exgGain[item] + ")");
 
@@ -611,7 +611,7 @@ public class ConfigurationFragment extends Fragment {
 
             @Override
             public void onClick(View arg0) {
-                if (mService.getShimmer(mBluetoothAddress).getFirmwareCode() > 2) {
+                if (mService.getShimmer().getFirmwareCode() > 2) {
                     dialogExgGain.show();
                 } else
                     Toast.makeText(getActivity(), "Operation not supported in this FW Version", Toast.LENGTH_SHORT).show();
@@ -624,7 +624,7 @@ public class ConfigurationFragment extends Fragment {
             public void onClick(DialogInterface dialog, int item) {
                 Log.d("Shimmer", exgGain[item]);
 
-                long enabledSensor = mService.getEnabledSensors(mBluetoothAddress);
+                long enabledSensor = mService.getEnabledSensors();
                 if (exgResolution[item] == "16 bits") {
                     if (((enabledSensor & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensor & Shimmer.SENSOR_EXG2_24BIT) > 0)) {//if 24bit sensors are enabled, change to 16 bit
                         enabledSensor = mService.sensorConflictCheckandCorrection(enabledSensor, Shimmer.SENSOR_EXG1_16BIT, (int) mShimmerVersion);
@@ -641,7 +641,7 @@ public class ConfigurationFragment extends Fragment {
 
 //						shimmerConfig.setEnabledSensors(enabledSensor);
 //        	  		    mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);					
-                mService.setEnabledSensors(enabledSensor, mBluetoothAddress);
+                mService.setEnabledSensors(enabledSensor);
                 Toast.makeText(getActivity(), "Exg resolution changed. New resolution = " + exgResolution[item], Toast.LENGTH_SHORT).show();
                 buttonExgRes.setText("EXG Res" + "\n" + "(" + exgResolution[item] + ")");
 
@@ -687,7 +687,7 @@ public class ConfigurationFragment extends Fragment {
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
 
-                if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("ECG")) {
+                if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("ECG")) {
                     int exg1_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
                     int exg2_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
                     int exg1_16bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1 16Bit"));
@@ -696,27 +696,27 @@ public class ConfigurationFragment extends Fragment {
                     if (enableSensorListView.isItemChecked(position)) { //if the ECG is checked
                         if (exgRes == 16) { //resolution selected is 16
                             if (!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT) > 0)) { //if the sensors are not enabled yet, then enable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion());
                             }
                         } else { //either the resolution is 24 or is not selected
                             if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT) > 0)) {  //if the sensors are not enabled yet, then enable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion());
                             }
                         }
-                        mService.writeEXGSetting(deviceBluetoothAddress, 0);
+                        mService.writeEXGSetting(0);
                         enableSensorListView.setItemChecked(position, true); //ECG
                     } else { //if the ECG is unchecked
                         if (exgRes == 16) { //resolution selected is 16
                             if ((enabledSensors & Shimmer.SENSOR_EXG1_16BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT) > 0) { //if the sensors are enabled, then disable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion());
                             }
                         } else { //either the resolution is 24 or is not selected
                             if ((enabledSensors & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT) > 0) {  //if the sensors are enabled, then disable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion());
                             }
                         }
                     }
@@ -724,7 +724,7 @@ public class ConfigurationFragment extends Fragment {
                     enableSensorListView.setItemChecked(position + 1, false); //EMG
                     enableSensorListView.setItemChecked(position + 2, false);// TEST SIGNAL
 
-                } else if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("EMG")) {
+                } else if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("EMG")) {
                     int exg1_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
                     int exg2_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
                     int exg1_16bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1 16Bit"));
@@ -733,27 +733,27 @@ public class ConfigurationFragment extends Fragment {
                     if (enableSensorListView.isItemChecked(position)) { //if the EMG is checked
                         if (exgRes == 16) { //resolution selected is 16
                             if (!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT) > 0)) { //if the sensors are not enabled yet, then enable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion());
                             }
                         } else { //either the resolution is 24 or is not selected
                             if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT) > 0)) {  //if the sensors are not enabled yet, then enable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion());
                             }
                         }
-                        mService.writeEXGSetting(deviceBluetoothAddress, 1);
+                        mService.writeEXGSetting(1);
                         enableSensorListView.setItemChecked(position, true); //EMG
                     } else { //if the ECG is unchecked
                         if (exgRes == 16) { //resolution selected is 16
                             if ((enabledSensors & Shimmer.SENSOR_EXG1_16BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT) > 0) { //if the sensors are enabled, then disable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion());
                             }
                         } else { //either the resolution is 24 or is not selected
                             if ((enabledSensors & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT) > 0) {  //if the sensors are enabled, then disable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion());
                             }
                         }
                     }
@@ -761,7 +761,7 @@ public class ConfigurationFragment extends Fragment {
                     enableSensorListView.setItemChecked(position - 1, false); //ECG
                     enableSensorListView.setItemChecked(position + 1, false); //TEST SIGNAL
 
-                } else if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("Test signal")) {
+                } else if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("Test signal")) {
                     int exg1_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
                     int exg2_24bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
                     int exg1_16bits = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1 16Bit"));
@@ -770,27 +770,27 @@ public class ConfigurationFragment extends Fragment {
                     if (enableSensorListView.isItemChecked(position)) { //if the TEST SIGNAL is checked
                         if (exgRes == 16) { //resolution selected is 16
                             if (!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT) > 0)) { //if the sensors are not enabled yet, then enable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion());
                             }
                         } else { //either the resolution is 24 or is not selected
                             if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT) > 0)) {  //if the sensors are not enabled yet, then enable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion());
                             }
                         }
-                        mService.writeEXGSetting(deviceBluetoothAddress, 2);
+                        mService.writeEXGSetting(2);
                         enableSensorListView.setItemChecked(position, true); //TEST SIGNAL
                     } else { //if the ECG is unchecked
                         if (exgRes == 16) { //resolution selected is 16
                             if ((enabledSensors & Shimmer.SENSOR_EXG1_16BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT) > 0) { //if the sensors are enabled, then disable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_16bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_16bits, mService.getShimmerVersion());
                             }
                         } else { //either the resolution is 24 or is not selected
                             if ((enabledSensors & Shimmer.SENSOR_EXG1_24BIT) > 0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT) > 0) {  //if the sensors are enabled, then disable them
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
-                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion(deviceBluetoothAddress));
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg1_24bits, mService.getShimmerVersion());
+                                enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, exg2_24bits, mService.getShimmerVersion());
                             }
                         }
                     }
@@ -801,12 +801,12 @@ public class ConfigurationFragment extends Fragment {
                 } else {
                     int sensorIdentifier = Integer.parseInt(sensorBitmaptoName.inverse().get(compatibleSensors[position]));
                     //check and remove any old daughter boards (sensors) which will cause a conflict with sensorIdentifier
-                    enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, sensorIdentifier, mService.getShimmerVersion(deviceBluetoothAddress));
+                    enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors, sensorIdentifier, mService.getShimmerVersion());
                     //update the checkbox accordingly
                     //since the last three elements (ECG,EMG,TestSignal) in Shimmer 3 are not signals,
                     //we treat them in a different way and they are not updated like the rest
                     int end = 0;
-                    if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3)
+                    if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3)
                         end = compatibleSensors.length - 3;
                     else
                         end = compatibleSensors.length;
@@ -829,7 +829,7 @@ public class ConfigurationFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Shimmer shimmer = mService.getShimmer(deviceBluetoothAddress);
+                Shimmer shimmer = mService.getShimmer();
                 compatibleSensors = shimmer.getListofSupportedSensors();
 
                 if (shimmer.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3) { //replace EXG1, EXG2, EXG1 16 bit and EXG2 16 bit for ECG,EMG and test signal
@@ -846,26 +846,26 @@ public class ConfigurationFragment extends Fragment {
                     for (int i = 0; i < tmp.size(); i++)
                         compatibleSensors[i] = tmp.get(i);
                 }
-                enabledSensors = mService.getEnabledSensors(deviceBluetoothAddress);
+                enabledSensors = mService.getEnabledSensors();
                 enableSensorListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
                 ArrayAdapter<String> adapterSensorNames = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, compatibleSensors);
                 enableSensorListView.setAdapter(adapterSensorNames);
-                sensorBitmaptoName = Shimmer.generateBiMapSensorIDtoSensorName(mService.getShimmerVersion(deviceBluetoothAddress));
+                sensorBitmaptoName = Shimmer.generateBiMapSensorIDtoSensorName(mService.getShimmerVersion());
                 //check the enabled sensors
                 for (int i = 0; i < compatibleSensors.length; i++) {
-                    if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("ECG")) {
-                        if (mService.isEXGUsingECG16Configuration(deviceBluetoothAddress) ||
-                                mService.isEXGUsingECG24Configuration(deviceBluetoothAddress)) {
+                    if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("ECG")) {
+                        if (mService.isEXGUsingECG16Configuration() ||
+                                mService.isEXGUsingECG24Configuration()) {
                             enableSensorListView.setItemChecked(i, true);
                         }
-                    } else if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("EMG")) {
-                        if (mService.isEXGUsingEMG16Configuration(deviceBluetoothAddress) ||
-                                mService.isEXGUsingEMG24Configuration(deviceBluetoothAddress)) {
+                    } else if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("EMG")) {
+                        if (mService.isEXGUsingEMG16Configuration() ||
+                                mService.isEXGUsingEMG24Configuration()) {
                             enableSensorListView.setItemChecked(i, true);
                         }
-                    } else if (mService.getShimmerVersion(deviceBluetoothAddress) == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("Test signal")) {
-                        if (mService.isEXGUsingTestSignal16Configuration(deviceBluetoothAddress) ||
-                                mService.isEXGUsingTestSignal24Configuration(deviceBluetoothAddress)) {
+                    } else if (mService.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("Test signal")) {
+                        if (mService.isEXGUsingTestSignal16Configuration() ||
+                                mService.isEXGUsingTestSignal24Configuration()) {
                             enableSensorListView.setItemChecked(i, true);
                         }
                     } else {
@@ -885,7 +885,7 @@ public class ConfigurationFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mService.setEnabledSensors(enabledSensors, deviceBluetoothAddress);
+                mService.setEnabledSensors(enabledSensors);
                 enableSensorDialog.dismiss();
                 try {
                     Thread.sleep(300);
@@ -893,13 +893,13 @@ public class ConfigurationFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                int gain = mService.getEXGGain(mBluetoothAddress);
+                int gain = mService.getEXGGain();
                 if (gain != -1)
                     buttonExgGain.setText("EXG Gain" + "\n (" + gain + ")");
                 else
                     buttonExgGain.setText("EXG Gain" + "\n (no gain set)");
 
-                exgRes = mService.getEXGResolution(mBluetoothAddress);
+                exgRes = mService.getEXGResolution();
                 if (exgRes == 16 || exgRes == 24)
                     buttonExgRes.setText("EXG Res" + "\n (" + exgRes + " bit)");
                 else
@@ -930,9 +930,9 @@ public class ConfigurationFragment extends Fragment {
 
             public void onCheckedChanged(CompoundButton arg0, boolean checked) {
                 if (checked) {
-                    mService.write5VReg(mBluetoothAddress, 1);
+                    mService.write5VReg(1);
                 } else {
-                    mService.write5VReg(mBluetoothAddress, 0);
+                    mService.write5VReg(0);
                 }
             }
 
@@ -944,11 +944,11 @@ public class ConfigurationFragment extends Fragment {
             public void onCheckedChanged(CompoundButton arg0, boolean checked) {
 
                 if (checked) {
-                    mService.setAccelLowPower(mBluetoothAddress, 1);
+                    mService.setAccelLowPower(1);
                     shimmerConfig.setLowPowerAccelEnabled(1);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 } else {
-                    mService.setAccelLowPower(mBluetoothAddress, 0);
+                    mService.setAccelLowPower(0);
                     shimmerConfig.setLowPowerAccelEnabled(0);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 }
@@ -961,11 +961,11 @@ public class ConfigurationFragment extends Fragment {
             public void onCheckedChanged(CompoundButton arg0, boolean checked) {
 
                 if (checked) {
-                    mService.setGyroLowPower(mBluetoothAddress, 1);
+                    mService.setGyroLowPower(1);
                     shimmerConfig.setLowPowerGyroEnabled(1);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 } else {
-                    mService.setGyroLowPower(mBluetoothAddress, 0);
+                    mService.setGyroLowPower(0);
                     shimmerConfig.setLowPowerGyroEnabled(0);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 }
@@ -978,11 +978,11 @@ public class ConfigurationFragment extends Fragment {
             public void onCheckedChanged(CompoundButton arg0, boolean checked) {
 
                 if (checked) {
-                    mService.writeIntExpPower(mBluetoothAddress, 1);
+                    mService.writeIntExpPower(1);
                     shimmerConfig.setIntExpPower(1);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 } else {
-                    mService.writeIntExpPower(mBluetoothAddress, 0);
+                    mService.writeIntExpPower(0);
                     shimmerConfig.setIntExpPower(0);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 }
@@ -995,11 +995,11 @@ public class ConfigurationFragment extends Fragment {
             public void onCheckedChanged(CompoundButton arg0, boolean checked) {
 
                 if (checked) {
-                    mService.setMagLowPower(mBluetoothAddress, 1);
+                    mService.setMagLowPower(1);
                     shimmerConfig.setLowPowerMagEnabled(1);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 } else {
-                    mService.setMagLowPower(mBluetoothAddress, 0);
+                    mService.setMagLowPower(0);
                     shimmerConfig.setLowPowerMagEnabled(0);
                     mService.mShimmerConfigurationList.set(currentPosition, shimmerConfig);
                 }
@@ -1013,8 +1013,8 @@ public class ConfigurationFragment extends Fragment {
         heartRateDialog.setCancelable(false);
         heartRateDialog.setContentView(R.layout.heart_rate_dialog);
         Spinner spinnerSensors = (Spinner) heartRateDialog.findViewById(R.id.spinnerSensors);
-        final long enableSensors = mService.getEnabledSensors(mBluetoothAddress);
-        if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration(mBluetoothAddress) || mService.isEXGUsingECG16Configuration(mBluetoothAddress))) {
+        final long enableSensors = mService.getEnabledSensors();
+        if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration() || mService.isEXGUsingECG16Configuration())) {
             final List<String> list = new ArrayList<String>();
             list.add(Shimmer3.ObjectClusterSensorName.ECG_LL_RA_24BIT);
             list.add(Shimmer3.ObjectClusterSensorName.ECG_LA_RA_24BIT);
@@ -1064,7 +1064,7 @@ public class ConfigurationFragment extends Fragment {
                         mSensorToHeartRate = "";
                     }
                 } else if (parent.getItemAtPosition(pos).toString().equals(Shimmer3.ObjectClusterSensorName.ECG_LL_RA_24BIT)) {
-                    if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration(mBluetoothAddress) || mService.isEXGUsingECG16Configuration(mBluetoothAddress))) {
+                    if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration() || mService.isEXGUsingECG16Configuration())) {
                         mSensorToHeartRate = Shimmer3.ObjectClusterSensorName.ECG_LL_RA_24BIT;
                     } else {
                         Toast.makeText(getActivity(), "WARNING: The sensor A12 is not enabled", Toast.LENGTH_SHORT).show();
@@ -1072,7 +1072,7 @@ public class ConfigurationFragment extends Fragment {
                     }
 
                 } else if (parent.getItemAtPosition(pos).toString().equals(Shimmer3.ObjectClusterSensorName.ECG_LA_RA_24BIT)) {
-                    if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration(mBluetoothAddress) || mService.isEXGUsingECG16Configuration(mBluetoothAddress))) {
+                    if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration() || mService.isEXGUsingECG16Configuration())) {
                         mSensorToHeartRate = Shimmer3.ObjectClusterSensorName.ECG_LA_RA_24BIT;
                     } else {
                         Toast.makeText(getActivity(), "WARNING: The sensor A13 is not enabled", Toast.LENGTH_SHORT).show();
@@ -1080,7 +1080,7 @@ public class ConfigurationFragment extends Fragment {
                     }
 
                 } else if (parent.getItemAtPosition(pos).toString().equals(Shimmer3.ObjectClusterSensorName.ECG_VX_RL_24BIT)) {
-                    if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration(mBluetoothAddress) || mService.isEXGUsingECG16Configuration(mBluetoothAddress))) {
+                    if (((Shimmer.SENSOR_EXG1_24BIT & enableSensors) > 0 || (Shimmer.SENSOR_EXG1_16BIT & enableSensors) > 0) && (mService.isEXGUsingECG24Configuration() || mService.isEXGUsingECG16Configuration())) {
                         mSensorToHeartRate = Shimmer3.ObjectClusterSensorName.ECG_VX_RL_24BIT;
                     } else {
                         Toast.makeText(getActivity(), "WARNING: The sensor A14 is not enabled", Toast.LENGTH_SHORT).show();
@@ -1127,12 +1127,12 @@ public class ConfigurationFragment extends Fragment {
                         if (mSensorToHeartRate.equals(Shimmer3.ObjectClusterSensorName.ECG_VX_RL_24BIT) ||
                                 mSensorToHeartRate.equals(Shimmer3.ObjectClusterSensorName.ECG_LA_RA_24BIT) ||
                                 mSensorToHeartRate.equals(Shimmer3.ObjectClusterSensorName.ECG_LL_RA_24BIT)) {
-                            if (mService.getSamplingRate(mBluetoothAddress) > 128) {
+                            if (mService.getSamplingRate() > 128) {
                                 Toast.makeText(getActivity(), "A lower sampling rate (e.g. 128 Hz) is recommended due to Android device processing limitations", Toast.LENGTH_LONG).show();
                             }
-                            mService.enableHeartRateECG(deviceBluetoothAddress, true, mSensorToHeartRate);
+                            mService.enableHeartRateECG(true, mSensorToHeartRate);
                         } else {
-                            mService.enableHeartRate(deviceBluetoothAddress, true, mSensorToHeartRate);
+                            mService.enableHeartRate(true, mSensorToHeartRate);
                         }
 
                         Toast.makeText(getActivity(), "Heart Rate enabled", Toast.LENGTH_SHORT).show();
@@ -1170,7 +1170,7 @@ public class ConfigurationFragment extends Fragment {
                     }
                 } else {
                     if (modifyHRState)
-                        mService.enableHeartRate("", false, "");
+                        mService.enableHeartRate(false, "");
                 }
             }
         });

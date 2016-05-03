@@ -254,7 +254,7 @@ public class DevicesFragment extends Fragment{
 						getActivity().getActionBar().setTitle(title); //set the title of the window
 					}
 					else if(optionSelected.equals(ENABLE_SENSOR)){
-						Shimmer shimmer = mService.getShimmer(deviceBluetoothAddresses[currentPosition]);
+						Shimmer shimmer = mService.getShimmer();
 						compatibleSensors = shimmer.getListofSupportedSensors();
 						
 						if(shimmer.getShimmerVersion() == ShimmerVerDetails.HW_ID.SHIMMER_3){ //replace EXG1, EXG2, EXG1 16 bit and EXG2 16 bit for ECG,EMG and test signal
@@ -273,29 +273,29 @@ public class DevicesFragment extends Fragment{
 //							System.arraycopy(tmp,0, compatibleSensors, 0, tmp.size());
 //							compatibleSensors =  (String[]) tmp.toArray();
 						}
- 						enabledSensors=mService.getEnabledSensors(deviceBluetoothAddresses[currentPosition]);
+ 						enabledSensors=mService.getEnabledSensors();
 // 						List<SelectedSensors> listEnableSensors = createListOfEnableSensor(enabledSensors);						
  						enableSensorListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
  						ArrayAdapter<String> adapterSensorNames = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_multiple_choice, compatibleSensors);
  						enableSensorListView.setAdapter(adapterSensorNames);
- 						sensorBitmaptoName = Shimmer.generateBiMapSensorIDtoSensorName(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+ 						sensorBitmaptoName = Shimmer.generateBiMapSensorIDtoSensorName(mService.getShimmerVersion());
  						//check the enabled sensors
  						for (int i=0;i<compatibleSensors.length;i++){
- 							if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("ECG")){
- 	 							if(mService.isEXGUsingECG16Configuration(deviceBluetoothAddresses[currentPosition]) ||
- 	 									mService.isEXGUsingECG24Configuration(deviceBluetoothAddresses[currentPosition])){
+ 							if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("ECG")){
+ 	 							if(mService.isEXGUsingECG16Configuration() ||
+ 	 									mService.isEXGUsingECG24Configuration()){
  	 								enableSensorListView.setItemChecked(i, true);
  	 							}
  							}
- 							else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("EMG")){
- 	 							if(mService.isEXGUsingEMG16Configuration(deviceBluetoothAddresses[currentPosition]) ||
- 	 									mService.isEXGUsingEMG24Configuration(deviceBluetoothAddresses[currentPosition])){
+ 							else if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("EMG")){
+ 	 							if(mService.isEXGUsingEMG16Configuration() ||
+ 	 									mService.isEXGUsingEMG24Configuration()){
  	 								enableSensorListView.setItemChecked(i, true);
  	 							}
  							}
- 							else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("Test signal")){
- 	 							if(mService.isEXGUsingTestSignal16Configuration(deviceBluetoothAddresses[currentPosition]) ||
- 	 									mService.isEXGUsingTestSignal24Configuration(deviceBluetoothAddresses[currentPosition])){
+ 							else if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[i].equals("Test signal")){
+ 	 							if(mService.isEXGUsingTestSignal16Configuration() ||
+ 	 									mService.isEXGUsingTestSignal24Configuration()){
  	 								enableSensorListView.setItemChecked(i, true);
  	 							}
  							} 							
@@ -322,7 +322,7 @@ public class DevicesFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				mService.setEnabledSensors(enabledSensors, deviceBluetoothAddresses[currentPosition]);
+				mService.setEnabledSensors(enabledSensors);
 				enableSensorDialog.dismiss();
 			}
 		});
@@ -335,82 +335,82 @@ public class DevicesFragment extends Fragment{
 					long arg3) {
 				// TODO Auto-generated method stub
 
-				if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("ECG")){
+				if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("ECG")){
 					int iDBMValue1 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
 					int iDBMValue3 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
 					if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT)>0) && 
 							!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT)>0)){
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion());
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion());
 					}
 					
 					if(!enableSensorListView.isItemChecked(position)){
 						enableSensorListView.setItemChecked(position, false); //ECG
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion());
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion());
 					}
 					else
 						enableSensorListView.setItemChecked(position, true); //ECG
 					enableSensorListView.setItemChecked(position+1, false); //EMG
 					enableSensorListView.setItemChecked(position+2, false);// TEST SIGNAL
 					if(enableSensorListView.isItemChecked(position))
-						mService.writeEXGSetting(deviceBluetoothAddresses[currentPosition], 0);
+						mService.writeEXGSetting(0);
 
 
 				}
-				else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("EMG")){
+				else if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("EMG")){
 					int iDBMValue1 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
 					int iDBMValue3 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
 					if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT)>0) && 
 							!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT)>0)){
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion());
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion());
 					}
 					if(!enableSensorListView.isItemChecked(position)){
 						enableSensorListView.setItemChecked(position, false); //EMG
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion());
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion());
 					}
 					else
 						enableSensorListView.setItemChecked(position, true); //EMG
 					enableSensorListView.setItemChecked(position-1, false); //ECG
 					enableSensorListView.setItemChecked(position+1, false); //TEST SIGNAL
 					if(enableSensorListView.isItemChecked(position))
-						mService.writeEXGSetting(deviceBluetoothAddresses[currentPosition], 1);
+						mService.writeEXGSetting(1);
 
 
 				}
-				else if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("Test signal")){
+				else if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3 && compatibleSensors[position].equals("Test signal")){
 					int iDBMValue1 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG1"));
 					int iDBMValue3 = Integer.parseInt(sensorBitmaptoName.inverse().get("EXG2"));
 					if (!((enabledSensors & Shimmer.SENSOR_EXG1_24BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_24BIT)>0) && 
 							!((enabledSensors & Shimmer.SENSOR_EXG1_16BIT)>0 && (enabledSensors & Shimmer.SENSOR_EXG2_16BIT)>0)){
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion());
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion());
 					}
 					if(!enableSensorListView.isItemChecked(position)){
 						enableSensorListView.setItemChecked(position, false); //TEST SIGNAL
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
-						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue1, mService.getShimmerVersion());
+						enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,iDBMValue3, mService.getShimmerVersion());
 					}
 					else
 						enableSensorListView.setItemChecked(position, true); //TEST SIGNAL
 					enableSensorListView.setItemChecked(position-1, false); //EMG
 					enableSensorListView.setItemChecked(position-2, false); //ECG
 					if(enableSensorListView.isItemChecked(position))
-						mService.writeEXGSetting(deviceBluetoothAddresses[currentPosition], 2);
+						mService.writeEXGSetting(2);
 
 
 				}
 				else{
 					int sensorIdentifier = Integer.parseInt(sensorBitmaptoName.inverse().get(compatibleSensors[position]));
 					//check and remove any old daughter boards (sensors) which will cause a conflict with sensorIdentifier 
-					enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,sensorIdentifier, mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition]));
+					enabledSensors = mService.sensorConflictCheckandCorrection(enabledSensors,sensorIdentifier, mService.getShimmerVersion());
 					//update the checkbox accordingly 
 					//since the last three elements (ECG,EMG,TestSignal) in Shimmer 3 are not signals,
 					//we treat them in a different way and they are not updated like the rest
 					int end=0;
-					if(mService.getShimmerVersion(deviceBluetoothAddresses[currentPosition])==ShimmerVerDetails.HW_ID.SHIMMER_3)
+					if(mService.getShimmerVersion()==ShimmerVerDetails.HW_ID.SHIMMER_3)
 						end=compatibleSensors.length-3;
 					else
 						end=compatibleSensors.length;
@@ -447,8 +447,8 @@ public class DevicesFragment extends Fragment{
 				}
 				else{
 					
-					if(mService.isShimmerConnected(deviceBluetoothAddresses[currentPositionListView])){
-						if(!mService.deviceStreaming(deviceBluetoothAddresses[currentPositionListView])){
+					if(mService.isShimmerConnected()){
+						if(!mService.deviceStreaming()){
 							Bundle args = new Bundle();
 					        args.putInt("position", currentPositionListView);
 					        args.putString("address", deviceBluetoothAddresses[currentPositionListView]);
@@ -495,10 +495,10 @@ public class DevicesFragment extends Fragment{
     	mService.disconnectAllDevices();
     }
     public void disconnectShimmer(int position){
-    	mService.disconnectShimmerNew(mService.mShimmerConfigurationList.get(position).getBluetoothAddress());
+    	mService.disconnectShimmerNew();
     } 
     public void toggleLed(int position){
-    	mService.toggleLED(mService.mShimmerConfigurationList.get(position).getBluetoothAddress());
+    	mService.toggleLED();
     }
     public void toggleAllLeds(){
     	mService.toggleAllLEDS();
@@ -514,11 +514,11 @@ public class DevicesFragment extends Fragment{
     }
     
     public void startStreaming(int position){
-    	mService.startStreaming(mService.mShimmerConfigurationList.get(position).getBluetoothAddress());
+    	mService.startStreaming();
     }
     
     public void stopStreaming(int position){	    	
-    	mService.stopStreaming(mService.mShimmerConfigurationList.get(position).getBluetoothAddress());
+    	mService.stopStreaming();
     }
 	    
 	
@@ -615,7 +615,7 @@ public class DevicesFragment extends Fragment{
 		    		    }
 		    		});
 		            
-		            mService.readAndSaveConfiguration(indexFully-2, addressInitialized);
+		            mService.readAndSaveConfiguration(indexFully-2);
 		        	
 		           		break;
 		            case Shimmer.MSG_STATE_STREAMING:
@@ -691,9 +691,9 @@ public class DevicesFragment extends Fragment{
   			deviceNames[pos]=sc.getDeviceName();
   			shimmerVersions[pos]=Integer.toString(sc.getShimmerVersion());
       		deviceBluetoothAddresses[pos]=sc.getBluetoothAddress();
-      		int state = mService.getShimmerState(sc.getBluetoothAddress());
-      		if( mService.getShimmerState(sc.getBluetoothAddress()) == 2 && 
-      				mService.deviceStreaming(sc.getBluetoothAddress())) //if the device is connected and streaming, the state is set to 3
+      		int state = mService.getShimmerState();
+      		if( mService.getShimmerState() == 2 &&
+      				mService.deviceStreaming()) //if the device is connected and streaming, the state is set to 3
       				state = 3;
       		
       		devicesStates[pos] = state;
@@ -762,7 +762,7 @@ public class DevicesFragment extends Fragment{
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				//first check to see if there is a connection to the device
-				if (!mService.isShimmerConnected(mService.mShimmerConfigurationList.get(position).getBluetoothAddress())){
+				if (!mService.isShimmerConnected()){
 					mService.mShimmerConfigurationList.remove(position);
 					updateShimmerListView(mService.mShimmerConfigurationList);
 //			    	mService.removeExapandableStates("ControlActivity");
