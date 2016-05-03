@@ -811,8 +811,4 @@ public class ShimmerDeviceService extends Service {
     public void enableHeartRate(String deviceBluetoothAddress, boolean b, String mSensorToHeartRate) {
         return;
     }
-
-
-
-
 }
