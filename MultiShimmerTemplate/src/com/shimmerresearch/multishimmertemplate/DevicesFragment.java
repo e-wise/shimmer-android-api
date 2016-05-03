@@ -10,9 +10,8 @@ import com.shimmerresearch.bluetooth.ShimmerBluetooth;
 import com.shimmerresearch.database.DatabaseHandler;
 import com.shimmerresearch.database.ShimmerConfiguration;
 import com.shimmerresearch.driver.ObjectCluster;
-import com.shimmerresearch.driver.ShimmerObject;
 import com.shimmerresearch.driver.ShimmerVerDetails;
-import com.shimmerresearch.service.MultiShimmerTemplateService;
+import com.shimmerresearch.service.ShimmerDeviceService;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,7 +43,7 @@ import android.widget.Toast;
 public class DevicesFragment extends Fragment{
 	
 
-	public static MultiShimmerTemplateService mService;
+	public static ShimmerDeviceService mService;
 	boolean mServiceBind=false;
 	public View rootView = null;
 	public ListView listViewShimmers;

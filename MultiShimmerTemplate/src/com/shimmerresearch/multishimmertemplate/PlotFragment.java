@@ -23,12 +23,10 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,10 +52,8 @@ import com.shimmerresearch.database.DatabaseHandler;
 import com.shimmerresearch.database.ShimmerConfiguration;
 import com.shimmerresearch.driver.FormatCluster;
 import com.shimmerresearch.driver.ObjectCluster;
-import com.shimmerresearch.driver.ShimmerObject;
 import com.shimmerresearch.driver.ShimmerVerDetails;
-import com.shimmerresearch.service.MultiShimmerTemplateService;
-
+import com.shimmerresearch.service.ShimmerDeviceService;
 
 
 public class PlotFragment extends Fragment {
@@ -93,7 +89,7 @@ public class PlotFragment extends Fragment {
     public static HashMap<String, List<Number>> mPlotDataMap = new HashMap<String, List<Number>>(10);
     public HashMap<String, List<SelectedSensors>> mSelectedSensors = new HashMap<String, List<SelectedSensors>>(7);
     View rootView;
-    MultiShimmerTemplateService mService;
+    ShimmerDeviceService mService;
 //	private boolean mServiceBind = false;
 	public static final String ARG_ITEM_ID = "item_id";
 	private Paint transparentPaint, outlinePaint;
@@ -314,7 +310,7 @@ public class PlotFragment extends Fragment {
 	        Log.d("Activity Name",activity.getClass().getSimpleName());
 	        
 	        if (!isMyServiceRunning()){
-	        	Intent intent=new Intent(getActivity(), MultiShimmerTemplateService.class);
+	        	Intent intent=new Intent(getActivity(), ShimmerDeviceService.class);
 	        	getActivity().startService(intent);
 	        }
 	    }
@@ -328,7 +324,7 @@ public class PlotFragment extends Fragment {
 				// TODO Auto-generated method stub
 				Log.d("Shimmer","SERRRVVVIIICE");
 				Log.d("ShimmerService", "service connected from main activity");
-	      		com.shimmerresearch.service.MultiShimmerTemplateService.LocalBinder binder = (com.shimmerresearch.service.MultiShimmerTemplateService.LocalBinder) service;
+	      		com.shimmerresearch.service.ShimmerDeviceService.LocalBinder binder = (com.shimmerresearch.service.ShimmerDeviceService.LocalBinder) service;
 	      		mService = binder.getService();
 	      		mServiceBind = true;
 	      		
@@ -344,7 +340,7 @@ public class PlotFragment extends Fragment {
 	    protected boolean isMyServiceRunning() {
 	        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
 	        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	            if ("com.shimmerresearch.service.MultiShimmerTemplateService".equals(service.service.getClassName())) {
+	            if ("com.shimmerresearch.service.ShimmerDeviceService".equals(service.service.getClassName())) {
 	                return true;
 	            }
 	        }

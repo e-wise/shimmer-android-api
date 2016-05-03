@@ -37,7 +37,7 @@
         </activity>  -->
         
         <activity android:name="com.shimmerresearch.multishimmertemplate.DeviceListActivity" android:label="Select Device" android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
-        <service android:enabled="true" android:name="com.shimmerresearch.service.MultiShimmerTemplateService" />
+        <service android:enabled="true" android:name="com.shimmerresearch.service.ShimmerDeviceService" />
     
     </application>
     

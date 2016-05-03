@@ -4,17 +4,12 @@ import java.util.ArrayList;
 
 import com.shimmerresearch.android.Shimmer;
 import com.shimmerresearch.database.ShimmerConfiguration;
-import com.shimmerresearch.driver.ShimmerObject;
 import com.shimmerresearch.driver.ShimmerVerDetails;
-import com.shimmerresearch.driver.ShimmerVerObject;
 import com.shimmerresearch.multishimmertemplate.ConfigurationFragment;
 import com.shimmerresearch.multishimmertemplate.DevicesFragment;
 import com.shimmerresearch.multishimmertemplate.R;
-import com.shimmerresearch.service.MultiShimmerTemplateService;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -23,10 +18,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;

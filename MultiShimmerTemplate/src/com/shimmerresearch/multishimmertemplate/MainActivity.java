@@ -44,8 +44,8 @@ import android.content.res.Configuration;
 import com.shimmerresearch.adapters.NavDrawerListAdapter;
 import com.shimmerresearch.database.DatabaseHandler;
 import com.shimmerresearch.model.NavDrawerItem;
-import com.shimmerresearch.service.MultiShimmerTemplateService;
-import com.shimmerresearch.service.MultiShimmerTemplateService.LocalBinder;
+import com.shimmerresearch.service.ShimmerDeviceService;
+import com.shimmerresearch.service.ShimmerDeviceService.LocalBinder;
 import com.shimmerresearch.tools.Logging;
 
 public class MainActivity extends Activity{
@@ -62,7 +62,7 @@ public class MainActivity extends Activity{
     private ArrayList<NavDrawerItem> navDrawerItems;
     private static NavDrawerListAdapter adapter;
     Dialog dialog;
-    public static MultiShimmerTemplateService mService;
+    public static ShimmerDeviceService mService;
 	boolean mServiceBind=false;
 	protected boolean mServiceFirstTime=true;
 	private SharedPreferences sp; 
@@ -88,7 +88,7 @@ public class MainActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         com.shimmerresearch.driver.Configuration.setTooLegacyObjectClusterSensorNames();
-        Intent intent=new Intent(this, MultiShimmerTemplateService.class);
+        Intent intent=new Intent(this, ShimmerDeviceService.class);
        	startService(intent);
         
        	sp= getApplicationContext().getSharedPreferences("yoursharedprefs", 0);
@@ -108,9 +108,7 @@ public class MainActivity extends Activity{
         navDrawerItems = new ArrayList<NavDrawerItem>();
         setNavDrawerItems();
         
-     // set up the drawer's list view with items and click listener
-//        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-//                R.layout.drawer_list_item, mOptionsMenu));
+     // set up the drawer's click listener
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
         adapter = new NavDrawerListAdapter(getApplicationContext(), navDrawerItems);
@@ -157,7 +155,6 @@ public class MainActivity extends Activity{
 	    				
 	    				@Override
 	    				public void onClick(DialogInterface dialog, int which) {
-	    					// TODO Auto-generated method stub
 	    					dialog.dismiss();
 	    				}
 	    			});
@@ -165,7 +162,7 @@ public class MainActivity extends Activity{
 	   
     }
     
-    public MultiShimmerTemplateService getService(){
+    public ShimmerDeviceService getService(){
 		return mService;
 	}
 	
@@ -173,24 +170,22 @@ public class MainActivity extends Activity{
 		Log.d("ShimmerTest","test");
 	}
 	
-	
 	protected ServiceConnection mTestServiceConnection = new ServiceConnection() {
 
       	public void onServiceConnected(ComponentName arg0, IBinder service) {
-      		// TODO Auto-generated method stub
       		Log.d("ShimmerService", "service connected");
-      		LocalBinder binder = (com.shimmerresearch.service.MultiShimmerTemplateService.LocalBinder) service;
+      		LocalBinder binder = (ShimmerDeviceService.LocalBinder) service;
       		mService = binder.getService();
       		db=mService.mDataBase;
       		mServiceBind = true;
-      		//update the view
-      		
-      		// this is needed because sometimes when there is an actitivity switch the service is not connecte yet, before the fragment was created, thus the fragment has no access to the service
+
+      		// this is needed because sometimes when there is an activity switch the service is not connected yet, before the fragment was created, thus the fragment has no access to the service
         	ConfigurationFragment configF = (ConfigurationFragment)getFragmentManager().findFragmentByTag("Configure");
         	PlotFragment plotF = (PlotFragment)getFragmentManager().findFragmentByTag("Plot");
         	DevicesFragment deviceF = (DevicesFragment)getFragmentManager().findFragmentByTag("Devices");
         	
 
+			//TODO this seems weird. Why are they else-if???
         	if (configF!=null){
     			configF.mService = mService;
     			configF.setup();
@@ -200,15 +195,11 @@ public class MainActivity extends Activity{
     		} else if (deviceF!=null){
     			deviceF.mService = mService;
     			deviceF.setup();
-    		} else {
-    			
     		}
-      		
       		
       		}
 
       	public void onServiceDisconnected(ComponentName arg0) {
-      		// TODO Auto-generated method stub
       		mServiceBind = false;
       	}
     };
@@ -216,7 +207,7 @@ public class MainActivity extends Activity{
     protected boolean isMyServiceRunning() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if ("com.shimmerresearch.service.MultiShimmerTemplateService".equals(service.service.getClassName())) {
+            if ("com.shimmerresearch.service.ShimmerDeviceService".equals(service.service.getClassName())) {
                 return true;
             }
         }
@@ -232,7 +223,7 @@ public class MainActivity extends Activity{
       
 	public void onResume(){
 		super.onResume();
-	  	Intent intent=new Intent(this, MultiShimmerTemplateService.class);
+	  	Intent intent=new Intent(this, ShimmerDeviceService.class);
 	  	Log.d("ShimmerH","on Resume");
 	  	getApplicationContext().bindService(intent,mTestServiceConnection, Context.BIND_AUTO_CREATE);
 	  	if (isMyServiceRunning())
@@ -266,20 +257,20 @@ public class MainActivity extends Activity{
     	
 		public void handleMessage(Message msg) {
             switch (msg.what) {
-	            case MultiShimmerTemplateService.MESSAGE_WRITING_STOPED:
+	            case ShimmerDeviceService.MESSAGE_WRITING_STOPED:
 	            	mWrite=false;
 	                MenuItem item = mMenu.getItem(0);
 	        		item.setIcon(R.drawable.ic_action_write);
 	        		mService.enableWritingHandler(false);
 	        		mService.closeAndRemoveFiles();
-	        		Toast.makeText(getApplicationContext(), "Files save successfully. You can find them in the MultiShimmerTemplate folder", Toast.LENGTH_LONG).show();
+	        		Toast.makeText(getApplicationContext(), "Files saved successfully. You can find them in the MultiShimmerTemplate folder", Toast.LENGTH_LONG).show();
 	            break;
             }
 		}
     };
 	
     
-    /* The click listner for ListView in the navigation drawer */
+    /* The click listener for ListView in the navigation drawer */
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -289,7 +280,7 @@ public class MainActivity extends Activity{
     
     
     /**
-	 * Diplaying fragment view for selected nav drawer list item
+	 * Displaying fragment view for selected nav drawer list item
 	 * */
 	private void displayView(int position) {
 		// update the main content by replacing fragments
@@ -389,7 +380,7 @@ public class MainActivity extends Activity{
         		item.setIcon(R.drawable.ic_action_write);
         		mService.enableWritingHandler(false);
         		mService.closeAndRemoveFiles();
-        		Toast.makeText(getApplicationContext(), "Files save successfully. You can find them in the MultiShimmerTemplate folder", Toast.LENGTH_LONG).show();
+        		Toast.makeText(getApplicationContext(), "Files saved successfully. You can find them in the MultiShimmerTemplate folder", Toast.LENGTH_LONG).show();
     		}
     		else{
     			connectedShimmers = DevicesFragment.connectedShimmerAddresses;
@@ -442,10 +433,8 @@ public class MainActivity extends Activity{
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-    
-   
 
-    
+
     public void showWriteDataDialog(){
     	
     	menuWriteDialog.setContentView(R.layout.write_data_menu);
@@ -459,7 +448,6 @@ public class MainActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 						mService.setWriteHandler(mHandler);
 						mWrite=true;
 						MenuItem item = mMenu.getItem(0);
@@ -476,7 +464,6 @@ public class MainActivity extends Activity{
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				showSetPathDialog();
 			}
 		});

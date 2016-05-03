@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.shimmerresearch.android.Shimmer;
 import com.shimmerresearch.database.DatabaseHandler;
-import com.shimmerresearch.service.MultiShimmerTemplateService;
+import com.shimmerresearch.service.ShimmerDeviceService;
 
 
 /**
@@ -45,7 +45,7 @@ public class BlankFragment extends Fragment {
 	boolean firstTime=true;
 	static Dialog dialog;
     View rootView;
-    MultiShimmerTemplateService mService;
+    ShimmerDeviceService mService;
 	public static final String ARG_ITEM_ID = "item_id";
 	static TextView mTVmsgreceived;
 	/**
@@ -87,7 +87,7 @@ public class BlankFragment extends Fragment {
 	        super.onAttach(activity);
 	        Log.d("Activity Name",activity.getClass().getSimpleName());
 	        if (!isMyServiceRunning()){
-	        	Intent intent=new Intent(getActivity(), MultiShimmerTemplateService.class);
+	        	Intent intent=new Intent(getActivity(), ShimmerDeviceService.class);
 	        	getActivity().startService(intent);
 	        }
 	    }
@@ -96,7 +96,7 @@ public class BlankFragment extends Fragment {
 	    protected boolean isMyServiceRunning() {
 	        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
 	        for (RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-	            if ("com.shimmerresearch.service.MultiShimmerTemplateService".equals(service.service.getClassName())) {
+	            if ("com.shimmerresearch.service.ShimmerDeviceService".equals(service.service.getClassName())) {
 	                return true;
 	            }
 	        }

@@ -9,13 +9,11 @@ import com.shimmerresearch.android.Shimmer;
 import com.shimmerresearch.database.DatabaseHandler;
 import com.shimmerresearch.database.ShimmerConfiguration;
 import com.shimmerresearch.driver.Configuration;
-import com.shimmerresearch.driver.ShimmerObject;
 import com.shimmerresearch.driver.ShimmerVerDetails;
 import com.shimmerresearch.driver.Configuration.Shimmer3;
-import com.shimmerresearch.service.MultiShimmerTemplateService;
+import com.shimmerresearch.service.ShimmerDeviceService;
 
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -34,7 +32,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -44,7 +41,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 public class ConfigurationFragment extends Fragment{
 	
 	public View rootView = null;
-	public MultiShimmerTemplateService mService;
+	public ShimmerDeviceService mService;
 	DatabaseHandler db;
 	
 	public static String mDone = "Done";
